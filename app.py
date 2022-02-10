@@ -10,8 +10,8 @@ async def on_startup(dp):
     import filters
     import middlewares
     
-    await on_startup_notify(dp)
-    await set_default_commands(dp)
+    # await on_startup_notify(dp)
+    # await set_default_commands(dp)
 
 
 async def on_shutdown(dp):
