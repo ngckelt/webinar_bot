@@ -1,27 +1,44 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
-from keyboards.inline.course_data import course_data_markup, course_data_callback, get_back_markup
+from keyboards.inline.webinars_data import webinar_link_markup
 from loader import dp
 from google_sheets.webinars import get_webinars_data
-from states.course_data import GetCourseDataStates
+from states.webinars_data import GetWebinarDataStates
 
 
 @dp.message_handler(text="Бесплатный вебинар 🔥")
 async def show_courses(message: types.Message, state: FSMContext):
-    await message.answer("Ищу информацию о вебинарах 🔎")
-    data = get_webinars_data()
-    print(data)
-    # data = get_courses_data()
-    # await state.update_data(courses_data=data)
-    # # courses_names: list = get_courses_names()
-    # # print(data)
-    # text: str = ""
-    # for courses_data in enumerate(data):
-    #     text += f"{courses_data[0] + 1}) {courses_data[1].name}\nПодробнее: /course_{courses_data[0] + 1}\n\n"
-    # await message.answer(
-    #     text=text,
-    # )
-    # await GetCourseDataStates.get_data.set()
+    await message.answer(
+        text="Ищу информацию о вебинарах 🔎",
+        reply_markup=types.ReplyKeyboardRemove()
+    )
+    webinars_data = get_webinars_data()
+    print(webinars_data.quantity)
+    for webinar in webinars_data.webinars:
+        print(webinar)
+    await message.answer(
+        text=webinars_data.description
+    )
+    await state.update_data(webinars_data=webinars_data)
+    await GetWebinarDataStates.get_data.set()
+
+
+@dp.message_handler(state=GetWebinarDataStates.get_data)
+async def get_webinar_number(message: types.Message, state: FSMContext):
+    webinar_numer = message.text
+    if webinar_numer.isdigit():
+        state_data = await state.get_data()
+        webinars_data = state_data.get("webinars_data")
+        try:
+            webinar = webinars_data.webinars[int(webinar_numer) - 1]
+            await message.answer(
+                text=webinar.description,
+                reply_markup=webinar_link_markup(webinar.link)
+            )
+        except:
+            await message.answer("Недопустимое значение числа")
+    else:
+        await message.answer("Необходимо ввести цифру")
 
 
