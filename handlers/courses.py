@@ -32,7 +32,7 @@ async def get_back(callback: types.CallbackQuery, callback_data: dict, state: FS
     course = courses_data[course_index]
     await callback.message.edit_text(
       text=course.description,
-      reply_markup=course_data_markup(course_index)
+      reply_markup=course_data_markup(course_index, course.payment_lin)
     )
 
 
@@ -44,7 +44,7 @@ async def show_course_data(message: types.Message, state: FSMContext):
     course = courses_data[course_index]
     await message.answer(
       text=course.description,
-      reply_markup=course_data_markup(course_index)
+      reply_markup=course_data_markup(course_index, course.payment_link)
     )
     # else:
     #     ...
@@ -63,7 +63,7 @@ async def show_course_price(callback: types.CallbackQuery, callback_data: dict, 
 
 
 @dp.callback_query_handler(course_data_callback.filter(option="format"), state=GetCourseDataStates.get_data)
-async def show_course_price(callback: types.CallbackQuery, callback_data: dict, state: FSMContext):
+async def show_course_format(callback: types.CallbackQuery, callback_data: dict, state: FSMContext):
     state_data = await state.get_data()
     courses_data = state_data.get("courses_data")
     course_index: int = int(callback_data.get("course_index"))
@@ -81,7 +81,7 @@ async def show_course_price(callback: types.CallbackQuery, callback_data: dict, 
     course_index: int = int(callback_data.get("course_index"))
     course = courses_data[course_index]
     await callback.message.edit_text(
-        text=course.payment_link,
+        text="Оплата происходит только через менеджера",
         reply_markup=get_back_markup(course_index)
     )
 

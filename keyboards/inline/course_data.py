@@ -4,8 +4,18 @@ from aiogram.utils.callback_data import CallbackData
 course_data_callback = CallbackData("course_data", "course_index", "option")
 
 
-def course_data_markup(course_index: int):
+def course_data_markup(course_index: int, payment_link: str):
     markup = InlineKeyboardMarkup(row_width=2)
+    if payment_link.startswith("http"):
+        payment_link_button = InlineKeyboardButton(
+            text="Ссылка на оплату",
+            url=payment_link
+        )
+    else:
+        payment_link_button = InlineKeyboardButton(
+            text="Оплата через менеджера",
+            callback_data=course_data_callback.new(course_index, "payment_link"),
+        )
     markup.add(
         InlineKeyboardButton(
             text="Цена",
@@ -15,10 +25,7 @@ def course_data_markup(course_index: int):
             text="Формат",
             callback_data=course_data_callback.new(course_index, "format"),
         ),
-        InlineKeyboardButton(
-            text="Ссылка на оплату",
-            callback_data=course_data_callback.new(course_index, "payment_link"),
-        ),
+        payment_link_button,
         InlineKeyboardButton(
             text="Связаться с менеджером",
             callback_data=course_data_callback.new(course_index, "connect_with_manager"),
