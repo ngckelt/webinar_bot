@@ -7,9 +7,12 @@ from google_sheets.courses import get_courses_data
 from states.course_data import GetCourseDataStates
 
 
-@dp.message_handler(text="Информация по курсу 📚")
+@dp.message_handler(text="Информация об обучении")
 async def show_courses(message: types.Message, state: FSMContext):
-    await message.answer("Ищу информацию о курсах 🔎")
+    await message.answer(
+        text="Ищу информацию о курсах 🔎",
+        reply_markup=types.ReplyKeyboardRemove()
+    )
     data = get_courses_data()
     await state.update_data(courses_data=data)
     # courses_names: list = get_courses_names()

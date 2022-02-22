@@ -7,7 +7,7 @@ from google_sheets.webinars import get_webinars_data
 from states.webinars_data import GetWebinarDataStates
 
 
-@dp.message_handler(text="Бесплатный вебинар 🔥")
+@dp.message_handler(text="Бесплатные вебинары")
 async def show_courses(message: types.Message, state: FSMContext):
     await message.answer(
         text="Ищу информацию о вебинарах 🔎",
