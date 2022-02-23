@@ -35,7 +35,7 @@ async def get_back(callback: types.CallbackQuery, callback_data: dict, state: FS
     course = courses_data[course_index]
     await callback.message.edit_text(
       text=course.description,
-      reply_markup=course_data_markup(course_index, course.payment_lin)
+      reply_markup=course_data_markup(course_index, course.payment_link)
     )
 
 
@@ -44,13 +44,14 @@ async def show_course_data(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     courses_data = state_data.get("courses_data")
     course_index: int = int(message.text.split('_')[1]) - 1
-    course = courses_data[course_index]
-    await message.answer(
-      text=course.description,
-      reply_markup=course_data_markup(course_index, course.payment_link)
-    )
-    # else:
-    #     ...
+    try:
+        course = courses_data[course_index]
+        await message.answer(
+          text=course.description,
+          reply_markup=course_data_markup(course_index, course.payment_link)
+        )
+    except:
+        await message.answer("Указано неверное значение")
 
 
 @dp.callback_query_handler(course_data_callback.filter(option="price"), state=GetCourseDataStates.get_data)

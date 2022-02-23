@@ -1,8 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
 
-course_data_callback = CallbackData("course_data", "course_index", "option")
-
 
 def webinar_link_markup(payment_link: str):
     markup = InlineKeyboardMarkup(row_width=2)
