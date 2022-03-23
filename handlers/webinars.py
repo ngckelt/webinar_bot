@@ -14,9 +14,6 @@ async def show_courses(message: types.Message, state: FSMContext):
         reply_markup=types.ReplyKeyboardRemove()
     )
     webinars_data = get_webinars_data()
-    print(webinars_data.quantity)
-    for webinar in webinars_data.webinars:
-        print(webinar)
     await message.answer(
         text=webinars_data.description
     )

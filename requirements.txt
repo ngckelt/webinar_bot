@@ -7,3 +7,4 @@ Pillow
 gunicorn
 gspread
 oauth2client
+amocrm_api

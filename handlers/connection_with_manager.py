@@ -1,15 +1,26 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-
 from keyboards.default.main import main_markup
 from keyboards.inline.course_data import course_data_callback
-from loader import dp
+from loader import dp, bot
 from keyboards.default.get_phone import get_phone_markup
 from states.connection_with_managers import ConnectionWithManagerStates
 from states.course_data import GetCourseDataStates
+from data.config import MANAGER_TELEGRAM_ID
 
 
-@dp.callback_query_handler(course_data_callback.filter(option="connect_with_manager"), state=GetCourseDataStates.get_data)
+async def send_message_to_manager(text: str):
+    try:
+        await bot.send_message(
+            chat_id=MANAGER_TELEGRAM_ID,
+            text=text
+        )
+    except:
+        ...
+
+
+@dp.callback_query_handler(course_data_callback.filter(option="connect_with_manager"),
+                           state=GetCourseDataStates.get_data)
 async def connection_with_manager_by_inline_button(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
     await callback.message.answer(
@@ -43,6 +54,8 @@ async def finish_connection(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     name = state_data.get("name")
     phone = state_data.get("phone")
+    text = f"Новый запрос!\nИмя: {name}\nТелефон: {phone}"
+    await send_message_to_manager(text)
     await message.answer(
         text="Данные успешно отправлены менеджеру",
         reply_markup=main_markup
@@ -60,6 +73,8 @@ async def get_phone(message: types.Message, state: FSMContext):
 @dp.message_handler(state=ConnectionWithManagerStates.get_phone)
 async def get_phone(message: types.Message, state: FSMContext):
     phone_number = message.text
-    await state.update_data(phone=phone_number)
-    await finish_connection(message, state)
-
+    if phone_number.isdigit():
+        await state.update_data(phone=phone_number)
+        await finish_connection(message, state)
+    else:
+        await message.answer("Телефон может содержать только цифры")

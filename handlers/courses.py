@@ -15,8 +15,6 @@ async def show_courses(message: types.Message, state: FSMContext):
     )
     data = get_courses_data()
     await state.update_data(courses_data=data)
-    # courses_names: list = get_courses_names()
-    # print(data)
     text: str = ""
     for courses_data in enumerate(data):
         text += f"{courses_data[0] + 1}) {courses_data[1].name}\nПодробнее: /course_{courses_data[0] + 1}\n\n"
