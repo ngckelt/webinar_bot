@@ -19,7 +19,7 @@ class WebinarsSata:
 
 def get_sheet_data():
     gs = gspread.service_account("google_sheets/webinar_creds.json")
-    return gs.open("course_vebinar_test_sheet").sheet1
+    return gs.open("Таблица по вебинарам").sheet1
 
 
 def get_webinars_data():

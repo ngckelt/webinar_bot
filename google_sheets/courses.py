@@ -15,7 +15,7 @@ class CourseData:
 
 def get_sheet_data():
     gs = gspread.service_account("google_sheets/creds.json")
-    return gs.open("courses_test_sheet").sheet1
+    return gs.open("Для бота курсы ").sheet1
 
 
 def get_courses_names() -> list:
